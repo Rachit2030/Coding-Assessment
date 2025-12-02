@@ -1,8 +1,27 @@
 <div class="min-h-screen flex flex-col md:flex-row">
-<nav class="w-full md:w-64 bg-white border-r p-4">
-<app-nav></app-nav>
-</nav>
-<main class="flex-1 p-4">
-<router-outlet></router-outlet>
-</main>
+
+  <!-- Sidebar / Mobile Menu -->
+  <nav class="bg-white border-b md:border-r p-4 md:w-64 flex-shrink-0">
+
+    <!-- Mobile hamburger button -->
+    <div class="flex justify-between items-center md:hidden mb-4">
+      <h2 class="text-lg font-semibold">Support Dashboard</h2>
+      <button (click)="toggleMenu()" class="text-2xl font-bold focus:outline-none">
+        ☰
+      </button>
+    </div>
+
+    <!-- Nav links -->
+    <div
+      [class.hidden]="isMobileView && !menuOpen"
+      class="space-y-4 md:block transition-all duration-300"
+    >
+      <app-nav></app-nav>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="flex-1 p-4">
+    <router-outlet></router-outlet>
+  </main>
 </div>

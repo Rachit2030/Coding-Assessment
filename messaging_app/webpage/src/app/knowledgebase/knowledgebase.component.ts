@@ -1,29 +1,15 @@
 import { Component } from '@angular/core';
-import { marked } from 'marked';
 
 @Component({
   selector: 'app-knowledgebase',
   templateUrl: './knowledgebase.component.html'
 })
 export class KnowledgebaseComponent {
-  text = `# Knowledgebase\n\nWrite docs here...`;
-  previewMode = false;
-
-  setPreview(val: boolean) {
-    this.previewMode = val;
-  }
-
-  get html() {
-    return marked.parse(this.text || '');
-  }
+  content = localStorage.getItem('kb_content') || '# Knowledgebase\n\nStart writing...';
+  preview = false;
 
   save() {
-    localStorage.setItem('kb-draft', this.text);
-    alert('Saved locally.');
-  }
-
-  ngOnInit() {
-    const saved = localStorage.getItem('kb-draft');
-    if (saved) this.text = saved;
+    localStorage.setItem('kb_content', this.content);
+    alert('Saved to localStorage (no backend)');
   }
 }

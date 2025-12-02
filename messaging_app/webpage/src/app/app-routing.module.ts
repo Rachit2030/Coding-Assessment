@@ -6,14 +6,14 @@ import { KnowledgebaseComponent } from './knowledgebase/knowledgebase.component'
 
 
 const routes: Routes = [
-{ path: '', redirectTo: 'tickets', pathMatch: 'full' },
-{ path: 'tickets', component: TicketViewerComponent },
-{ path: 'kb', component: KnowledgebaseComponent },
-{ path: 'logs', component: LiveLogsComponent },
+  { path: '', redirectTo: 'tickets', pathMatch: 'full' },
+  { path: 'tickets', component: TicketViewerComponent },
+  { path: 'kb', component: KnowledgebaseComponent },
+  { path: 'logs', component: LiveLogsComponent },
 ];
 
 @NgModule({
-imports: [RouterModule.forRoot(routes)],
-exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

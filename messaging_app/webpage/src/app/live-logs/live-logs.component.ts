@@ -1,35 +1,31 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-live-logs',
   templateUrl: './live-logs.component.html'
 })
-export class LiveLogsComponent implements OnDestroy {
+export class LiveLogsComponent implements OnInit, OnDestroy {
   logs: string[] = [];
-  timerId: any;
+  sub: Subscription | undefined;
   @ViewChild('logBox') logBox!: ElementRef<HTMLDivElement>;
 
-  constructor() {
-    this.start();
-  }
-
-  start() {
-    this.timerId = setInterval(() => {
-      const now = new Date().toLocaleTimeString();
-      const entry = `[${now}] EVENT: ${['heartbeat','user_login','db_write','cache_miss','api_call'][Math.floor(Math.random()*5)]} id=${Math.floor(Math.random()*9999)}`;
-      this.logs.push(entry);
-      if (this.logs.length > 500) this.logs.shift();
-      setTimeout(() => {
-        if (this.logBox) this.logBox.nativeElement.scrollTop = this.logBox.nativeElement.scrollHeight;
-      }, 20);
-    }, 2000);
-  }
-
-  clear() {
-    this.logs = [];
+  ngOnInit() {
+    this.sub = interval(1500).subscribe(() => this.pushRandom());
   }
 
   ngOnDestroy() {
-    clearInterval(this.timerId);
+    this.sub?.unsubscribe();
+  }
+
+  pushRandom() {
+    const levels = ['INFO','WARN','ERROR','DEBUG'];
+    const level = levels[Math.floor(Math.random()*levels.length)];
+    const message = `${new Date().toLocaleTimeString()} [${level}] Simulated event: ${Math.random().toString(36).slice(2,9)}`;
+    this.logs.push(message);
+    if(this.logs.length>200) this.logs.shift();
+    setTimeout(()=> {
+      try { this.logBox.nativeElement.scrollTop = this.logBox.nativeElement.scrollHeight; } catch(e) {}
+    }, 50);
   }
 }

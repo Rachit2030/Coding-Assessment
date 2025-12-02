@@ -1,12 +1,6 @@
-<div class="bg-white shadow rounded p-4">
-  <div class="flex items-center justify-between mb-3">
-    <h2 class="text-lg font-semibold">Live Logs</h2>
-    <div>
-      <button (click)="clear()" class="mr-2 px-3 py-1 border rounded">Clear</button>
-    </div>
-  </div>
-
-  <div #logBox class="h-64 overflow-auto bg-slate-900 text-white p-3 font-mono text-sm rounded">
+<div class="bg-white p-4 rounded shadow">
+  <h3 class="text-lg font-semibold mb-2">Live Logs</h3>
+  <div #logBox class="h-60 md:h-96 overflow-auto bg-black text-white font-mono p-2 rounded">
     <div *ngFor="let l of logs">{{l}}</div>
   </div>
 </div>
