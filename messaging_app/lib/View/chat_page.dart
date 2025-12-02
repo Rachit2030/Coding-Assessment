@@ -13,6 +13,19 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollCtrl = ScrollController();
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to cubit updates
+    context.read<ChatCubit>().stream.listen((messages) {
+      if (_listKey.currentState != null && messages.isNotEmpty) {
+        _listKey.currentState!.insertItem(messages.length - 1);
+        _scrollToBottom();
+      }
+    });
+  }
 
   void _scrollToBottom() {
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -30,105 +43,81 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     final messages = context.watch<ChatCubit>().state;
 
-    // Auto scroll after every build
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-
     return Scaffold(
       appBar: AppBar(title: const Text("Messaging App")),
       body: SafeArea(
         child: Column(
           children: [
             Flexible(
-              child: ListView.builder(
+              child: AnimatedList(
+                key: _listKey,
                 controller: _scrollCtrl,
-                itemCount: messages.length,
-                itemBuilder: (_, i) => ChatBubble(message: messages[i]),
+                initialItemCount: messages.length,
+                itemBuilder: (context, index, animation) {
+                  final message = messages[index];
+                  return SizeTransition(
+                    sizeFactor: animation,
+                    axisAlignment: 0.0,
+                    child: ChatBubble(message: message),
+                  );
+                },
               ),
             ),
-            _inputBar(context),
+            _inputBar(),
           ],
         ),
       ),
     );
   }
 
-  // Widget _inputBar(BuildContext context) {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(12),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: TextField(
-  //             controller: _controller,
-  //             decoration: const InputDecoration(
-  //               border: OutlineInputBorder(),
-  //               hintText: "Type a message",
-  //             ),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 8),
-  //         IconButton(
-  //           icon: const Icon(Icons.send),
-  //           onPressed: () {
-  //             final text = _controller.text.trim();
-  //             if (text.isNotEmpty) {
-  //               context.read<ChatCubit>().sendMessage(text);
-  //               _controller.clear();
-  //             }
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _inputBar() {
+    final cubit = context.read<ChatCubit>();
 
-  Widget _inputBar(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-    child: Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: "Type a message...",
-              filled: true,
-              fillColor: Theme.of(context).colorScheme.surfaceVariant,
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(24),
-                borderSide: BorderSide.none,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: "Type a message...",
+                filled: true,
+                fillColor: Theme.of(context).colorScheme.surfaceVariant,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Material(
-          color: Theme.of(context).colorScheme.primary,
-          borderRadius: BorderRadius.circular(24),
-          child: InkWell(
+          const SizedBox(width: 8),
+          Material(
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(24),
-            onTap: () {
-              final text = _controller.text.trim();
-              if (text.isNotEmpty) {
-                context.read<ChatCubit>().sendMessage(text);
-                _controller.clear();
-              }
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(12),
-              child: Icon(
-                Icons.send,
-                color: Colors.white,
-                size: 24,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () {
+                final text = _controller.text.trim();
+                if (text.isNotEmpty) {
+                  cubit.sendMessage(text);
+                  _controller.clear();
+                }
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(12),
+                child: Icon(
+                  Icons.send,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+        ],
+      ),
+    );
+  }
 }
