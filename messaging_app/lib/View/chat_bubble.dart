@@ -73,8 +73,7 @@ class ChatBubble extends StatelessWidget {
           fit: BoxFit.cover,
         );
       case MessageType.text:
-      default:
-        return Text(
+      return Text(
           message.text,
           style: TextStyle(
             color: message.isMe ? Colors.white : Colors.black,

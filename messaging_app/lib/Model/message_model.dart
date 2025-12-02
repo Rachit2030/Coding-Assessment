@@ -15,7 +15,7 @@ class MessageModel {
     required this.isMe,
     required this.timestamp,
     this.messageType = MessageType.text,
-    this.senderName,
     this.isRead = false,
+    this.senderName
   });
 }
