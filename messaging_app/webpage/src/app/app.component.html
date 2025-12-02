@@ -1,5 +1,8 @@
-<div style="padding: 20px; text-align: center;">
-  <h1>Internal Tools Dashboard</h1>
-  <p>Angular app is working! 🎉</p>
-  <p>Current path: {{ currentPath }}</p>
+<div class="min-h-screen flex flex-col md:flex-row">
+<nav class="w-full md:w-64 bg-white border-r p-4">
+<app-nav></app-nav>
+</nav>
+<main class="flex-1 p-4">
+<router-outlet></router-outlet>
+</main>
 </div>
