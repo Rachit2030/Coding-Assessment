@@ -29,6 +29,8 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     final messages = context.watch<ChatCubit>().state;
+
+    // Auto scroll after every build
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
 
     return Scaffold(
