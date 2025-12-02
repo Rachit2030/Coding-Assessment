@@ -15,7 +15,22 @@ class MyApp extends StatelessWidget {
     // Provide ChatCubit at the top level
     return BlocProvider(
       create: (_) => ChatCubit(),
-      child: const MaterialApp(
+      child: MaterialApp(
+        theme: ThemeData.light(useMaterial3: true).copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            brightness: Brightness.light,
+          ),
+          scaffoldBackgroundColor: Colors.grey[100], 
+        ),
+        darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.blue,
+            brightness: Brightness.dark,
+          ),
+          scaffoldBackgroundColor: Colors.grey[900], 
+        ),
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         home: ChatPage(),
       ),
