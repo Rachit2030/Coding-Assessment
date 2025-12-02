@@ -1,0 +1,12 @@
+<div class="bg-white shadow rounded p-4">
+  <div class="flex items-center justify-between mb-3">
+    <h2 class="text-lg font-semibold">Live Logs</h2>
+    <div>
+      <button (click)="clear()" class="mr-2 px-3 py-1 border rounded">Clear</button>
+    </div>
+  </div>
+
+  <div #logBox class="h-64 overflow-auto bg-slate-900 text-white p-3 font-mono text-sm rounded">
+    <div *ngFor="let l of logs">{{l}}</div>
+  </div>
+</div>

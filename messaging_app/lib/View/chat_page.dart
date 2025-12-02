@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messaging_app/View/internal_tools/tools_page.dart';
 import '../cubit/chat_cubit.dart';
 import 'chat_bubble.dart';
 
@@ -44,7 +45,20 @@ class _ChatPageState extends State<ChatPage> {
     final messages = context.watch<ChatCubit>().state;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Messaging App")),
+      appBar: AppBar(title: const Text("Messaging App"),actions: [
+  IconButton(
+    icon: const Icon(Icons.dashboard),
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ToolsPage(),
+        ),
+      );
+    },
+  )
+],),
+      
       body: SafeArea(
         child: Column(
           children: [

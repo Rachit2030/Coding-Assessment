@@ -1,0 +1,31 @@
+{
+"name": "internal-tools-dashboard",
+"version": "0.0.1",
+"private": true,
+"scripts": {
+"ng": "ng",
+"start": "ng serve --host 0.0.0.0 --port 4200",
+"build": "ng build --configuration production",
+"lint": "ng lint"
+},
+"dependencies": {
+"@angular/animations": "^16.2.0",
+"@angular/common": "^16.2.0",
+"@angular/compiler": "^16.2.0",
+"@angular/core": "^16.2.0",
+"@angular/forms": "^16.2.0",
+"@angular/platform-browser": "^16.2.0",
+"@angular/platform-browser-dynamic": "^16.2.0",
+"@angular/router": "^16.2.0",
+"marked": "^5.1.1"
+},
+"devDependencies": {
+"@angular/cli": "^16.2.0",
+"autoprefixer": "^10.4.14",
+"postcss": "^8.4.21",
+"tailwindcss": "^3.4.14",
+"typescript": "~5.1.6",
+"@angular-devkit/build-angular": "^16.2.0",
+"@types/node": "~18.18.0"
+}
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messaging_app/View/internal_tools/tools_page.dart';
 import 'cubit/chat_cubit.dart';
 import 'view/chat_page.dart';
 
@@ -32,7 +33,10 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
-        home: ChatPage(),
+        routes: {
+        '/': (_) => const ChatPage(),
+        '/tools': (_) => ToolsPage(),
+      },
       ),
     );
   }

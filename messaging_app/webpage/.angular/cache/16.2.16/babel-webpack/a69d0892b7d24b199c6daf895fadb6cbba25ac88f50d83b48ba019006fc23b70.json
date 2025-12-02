@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const appRoutes = [{\n  path: '',\n  redirectTo: 'tickets',\n  pathMatch: 'full'\n}\n// { path: 'tickets', component: TicketViewerComponent },\n// { path: 'kb', component: KnowledgebaseComponent },\n// { path: 'logs', component: LiveLogsComponent }\n];","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
