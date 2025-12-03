@@ -43,7 +43,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   build_runner:
-  image_picker: ^1.0.7  # Add this
+  image_picker: ^1.0.7
+  google_generative_ai: ^0.4.0
 
 
 dev_dependencies:
