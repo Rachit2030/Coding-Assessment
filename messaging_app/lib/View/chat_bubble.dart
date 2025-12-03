@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:messaging_app/Model/message_model.dart';
@@ -8,77 +9,151 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final time = DateFormat.Hm().format(message.timestamp);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isMe = message.isMe;
 
-    return Align(
-      alignment: message.isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: message.isMe ? Colors.blue : Colors.grey[300],
-          borderRadius: BorderRadius.circular(12),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: 
+          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        // Message Bubble (NO timestamp inside)
+        Align(
+          alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
+              ),
+              margin: const EdgeInsets.only(bottom: 2),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: isMe 
+                    ? [const Color(0xFF4FC3F7), const Color(0xFF0288D1)]
+                    : [const Color(0xFF26A69A), const Color(0xFF00796B)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: (isMe ? const Color(0xFF0288D1) : const Color(0xFF00796B))
+                        .withOpacity(isDark ? 0.4 : 0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: isMe 
+                  ? CrossAxisAlignment.end 
+                  : CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Sender name (only for received messages)
+                  if (message.senderName != null && !isMe)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text(
+                        message.senderName!,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                    ),
+                  
+                  // Message content ONLY
+                  _messageContent(context),
+                ],
+              ),
+            ),
+          ),
         ),
-        child: Column(
-          crossAxisAlignment:
-              message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (message.senderName != null && !message.isMe)
+        
+        // REAL SYSTEM TIMESTAMP - Outside bubble
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 8,
+            vertical: isMe ? 2 : 6,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: isMe 
+              ? MainAxisAlignment.end 
+              : MainAxisAlignment.start,
+            children: [
               Text(
-                message.senderName!,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black54,
+                _getRealSystemTime(),
+                style: TextStyle(
+                  fontSize: 11,
+                  color: Colors.white.withOpacity(0.6),
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.3,
                 ),
               ),
-            _messageContent(),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  time,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: message.isMe ? Colors.white70 : Colors.black54,
-                  ),
+              if (isMe) ...[
+                const SizedBox(width: 4),
+                Icon(
+                  message.isRead ? Icons.done_all : Icons.done,
+                  size: 12,
+                  color: Colors.white.withOpacity(0.7),
                 ),
-                if (message.isMe)
-                  Icon(
-                    message.isRead ? Icons.done_all : Icons.check,
-                    size: 12,
-                    color: message.isRead ? Colors.white : Colors.white70,
-                  ),
               ],
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _messageContent() {
-    switch (message.messageType) {
-      case MessageType.emoji:
-        return Text(
+  /// Get REAL system timestamp (updates every second)
+  String _getRealSystemTime() {
+    final now = DateTime.now();
+    return DateFormat('HH:mm').format(now);
+  }
+
+  Widget _messageContent(BuildContext context) {
+    return switch (message.messageType) {
+      MessageType.emoji => Text(
           message.text,
-          style: const TextStyle(fontSize: 24),
-        );
-      case MessageType.image:
-        return Image.network(
-          message.text,
-          width: 150,
-          height: 150,
-          fit: BoxFit.cover,
-        );
-      case MessageType.text:
-      return Text(
-          message.text,
-          style: TextStyle(
-            color: message.isMe ? Colors.white : Colors.black,
+          style: const TextStyle(fontSize: 28, height: 1.2),
+          textAlign: TextAlign.center,
+        ),
+      MessageType.image => ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.network(
+            message.text,
+            width: 180,
+            height: 180,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) => Container(
+              height: 180,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(
+                Icons.image_not_supported,
+                color: Colors.white70,
+                size: 50,
+              ),
+            ),
           ),
-        );
-    }
+        ),
+      MessageType.text || _ => Text(
+          message.text,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.white,
+            height: 1.4,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+    };
   }
 }
