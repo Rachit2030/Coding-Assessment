@@ -229,11 +229,11 @@ class _ChatPageState extends State<ChatPage> {
     final cubit = context.read<ChatCubit>();
 
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
       decoration: BoxDecoration(
         color: isDark ? Colors.grey[850]!.withOpacity(0.9) : Colors.white.withOpacity(0.98),
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(30),
         border: Border.all(color: isDark ? Colors.grey[700]! : Colors.grey[300]!, width: 1.5),
         boxShadow: [BoxShadow(color: isDark ? Colors.black.withOpacity(0.3) : Colors.black.withOpacity(0.08), blurRadius: 12, offset: const Offset(0, 3))],
       ),
@@ -246,7 +246,7 @@ class _ChatPageState extends State<ChatPage> {
             icon: Icon(_showEmojiKeyboard ? Icons.keyboard : Icons.emoji_emotions, color: isDark ? Colors.white70 : Colors.grey[600]),
             onPressed: _toggleEmojiKeyboard,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
           
           Expanded(
             child: TextField(
