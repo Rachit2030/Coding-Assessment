@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:messaging_app/Model/message_model.dart';
 
@@ -103,47 +105,72 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
-  Widget _messageContent(BuildContext context) {
-    return switch (message.messageType) {
-      MessageType.emoji => Text(
-          message.text,
-          style: const TextStyle(fontSize: 28, height: 1.2),
-          textAlign: TextAlign.center,
+Widget _messageContent(BuildContext context) {
+  return switch (message.messageType) {
+    // ✅ TEXT
+    MessageType.text => Text(
+        message.text,
+        style: const TextStyle(
+          fontSize: 16,
+          color: Colors.white,
+          height: 1.4,
+          fontWeight: FontWeight.w500,
         ),
-      MessageType.image => ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Image.network(
-            message.text,
-            width: 180,
-            height: 180,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              height: 180,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.grey.shade300, Colors.grey.shade400],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                Icons.image_not_supported,
-                color: Colors.grey.shade600,
-                size: 50,
-              ),
-            ),
-          ),
-        ),
-      MessageType.text || _ => Text(
-          message.text,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white,
-            height: 1.4,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-    };
+      ),
+    
+    // ✅ EMOJI
+    MessageType.emoji => Text(
+        message.text,
+        style: const TextStyle(fontSize: 28, height: 1.2),
+        textAlign: TextAlign.center,
+      ),
+    
+    // ✅ FIXED: LOCAL IMAGES
+    MessageType.image => ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: _buildImageWidget(message.text),
+      ),
+  };
+}
+
+Widget _buildImageWidget(String imagePath) {
+  // Check if local file
+  if (imagePath.startsWith('/')) {
+    return Image.file(
+      File(imagePath),
+      width: 180,
+      height: 180,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => _imageErrorWidget(),
+    );
   }
+  
+  // Network image fallback
+  return Image.network(
+    imagePath,
+    width: 180,
+    height: 180,
+    fit: BoxFit.cover,
+    errorBuilder: (context, error, stackTrace) => _imageErrorWidget(),
+  );
+}
+
+Widget _imageErrorWidget() {
+  return Container(
+    height: 180,
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [Colors.grey.shade300, Colors.grey.shade400],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(16),
+    ),
+    child:  Icon(
+      Icons.image_not_supported,
+      color: Colors.grey.shade600,
+      size: 50,
+    ),
+  );
+}
 }

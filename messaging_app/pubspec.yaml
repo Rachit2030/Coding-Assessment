@@ -43,6 +43,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   build_runner:
+  image_picker: ^1.0.7  # Add this
+
 
 dev_dependencies:
   flutter_test:
