@@ -1,4 +1,4 @@
-const String geminiApiKey = 'AIzaSyA3l5TQddngeOxDCg-rtFDubj1MNokJg1A';
+const String geminiApiKey = '';
 
 const String modelname = 'gemini-2.5-flash';
 
