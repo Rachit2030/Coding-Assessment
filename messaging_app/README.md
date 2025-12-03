@@ -14,7 +14,8 @@ persistent message storage, and smooth Bloc state management.
 -   [📱 Flutter App + WebView](#-flutter-app--webview)
 -   [🤖 Gemini AI Setup](#-gemini-ai-setup)
 -   [✨ Features](#-features)
--   [🔧 Troubleshooting](#-troubleshooting)
+-   [📸 Screenshots](#-screenshots)
+-   [🔧 Troubleshooting](#-Troubleshooting)
 -   [⚡ Quick Start](#-quick-start)
 
 ------------------------------------------------------------------------
@@ -34,7 +35,7 @@ npm --version
 ### **Start Server**
 
 ``` bash
-cd webpage  
+cd webpage        
 npm install
 npm start
 ```
@@ -46,7 +47,7 @@ npm start
 
 # 📱 Flutter App + WebView
 
-### **Your `pubspec.yaml` (Provided)**
+### **Your `pubspec.yaml`**
 
 ``` yaml
 dependencies:
@@ -86,31 +87,56 @@ Edit: `lib/Data/constants.dart`
 const String GEMINI_API_KEY = 'your-actual-api-key-here';
 ```
 
-Use inside your `ChatCubit` as needed.
-
 ------------------------------------------------------------------------
 
 # ✨ Features
 
 ### ✅ **Core Features**
 
--   Angular web app with device theme sync
--   Flutter AI chat using **Gemini 2.5 Flash**
--   Embedded Angular inside Flutter WebView
--   Persistent messages (Hive)
--   Image support + emoji support
--   Bloc/Cubit state management
--   Offline fallback bot
--   Distinct sender names (Rachit AI vs Fallback bot)
-
-------------------------------------------------------------------------
+-   Flutter AI chat with **Gemini 2.5 Flash**
+-   Angular app embedded inside Flutter WebView
+-   Persistent chat storage with Hive
+-   Image + Emoji support
+-   Zero-downtime fallback bot
+-   Bloc/Cubit architecture
+-   Light/Dark theme sync
+-   Distinct sender names (Rachit AI vs Fallback)
 
 ### ⚡ **Stretch Goals**
 
--   Zero-downtime fallback for AI outages\
--   Full screen overlay hamburger menu on mobile\
--   Network-accessible Angular dev server\
--   Perfect light/dark theme sync
+-   Full-screen overlay hamburger menu (mobile)
+-   Improved theme linking with Angular
+-   Enhanced offline capabilities
+
+------------------------------------------------------------------------
+
+# 📸 Screenshots
+
+## 📱 Mobile (iOS App)
+
+::: {style="display: flex; flex-wrap: wrap; gap: 10px;"}
+
+<img src="https://github.com/user-attachments/assets/3eab43f4-458b-4bb2-8586-b066f7e02c26" width="30%" />
+<img src="https://github.com/user-attachments/assets/52a23ca2-1550-4c1e-9906-fb435fdd99e8" width="30%" />
+<img src="https://github.com/user-attachments/assets/d87852b0-8c2e-43aa-b4c3-46c92f897da9" width="30%" />
+
+<img src="https://github.com/user-attachments/assets/fbf5a7b0-f5dd-4e3a-b80d-6d83707e8ca8" width="30%" />
+<img src="https://github.com/user-attachments/assets/0ae00c06-40b7-4e8f-abc0-e8871f91975d" width="30%" />
+<img src="https://github.com/user-attachments/assets/f9663d6a-c91f-4403-bd5e-130ededad53c" width="30%" />
+<img src="https://github.com/user-attachments/assets/a9aa9a85-beb8-4fb4-800f-96fc26abb675" width="30%" />
+
+<img src="https://github.com/user-attachments/assets/ecb2d390-4e34-4ae7-9428-3f7a1d451646" width="30%" />
+:::
+
+------------------------------------------------------------------------
+
+## 🖥️ Web Dashboard (Angular)
+
+
+<img src="https://github.com/user-attachments/assets/6c8b9925-8c55-4dc3-a225-11d48cd8fd5c" width="30%" />
+<img src="https://github.com/user-attachments/assets/2eb36f8c-d50b-4f09-bcc3-df9a49a0ef21" width="30%" />
+<img src="https://github.com/user-attachments/assets/9df72942-2b25-4642-b05f-4b8721e7c3f0" width="30%" />
+
 
 ------------------------------------------------------------------------
 
@@ -119,10 +145,10 @@ Use inside your `ChatCubit` as needed.
   -----------------------------------------------------------------------
   Issue                         Solution
   ----------------------------- -----------------------------------------
-  WebView shows blank           Use `http://10.0.2.2:4200` for Android
+  WebView blank                 Use `http://10.0.2.2:4200` for Android
                                 emulator
 
-  "Model not supported" error   Use `gemini-2.5-flash`
+  Model not supported           Use `gemini-2.5-flash`
 
   Angular unreachable           `ng serve --host 0.0.0.0 --port 4200`
 
@@ -133,7 +159,7 @@ Use inside your `ChatCubit` as needed.
 
 # ⚡ Quick Start
 
-### **Terminal 1 --- Angular**
+### Terminal 1 --- Angular
 
 ``` bash
 cd webpage
@@ -141,7 +167,7 @@ npm install
 npm start
 ```
 
-### **Terminal 2 --- Flutter**
+### Terminal 2 --- Flutter
 
 ``` bash
 cd messaging_app
@@ -149,5 +175,5 @@ flutter pub get
 flutter run
 ```
 
-🎉 **Your Flutter messaging app now loads the Angular WebView and Gemini
-AI chat!**
+🎉 **Your full messaging app is now running with Angular + Flutter AI
+chat!**
