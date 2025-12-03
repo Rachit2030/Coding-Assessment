@@ -1,6 +1,55 @@
-<div class="bg-white rounded-xl shadow-lg p-4 h-96 overflow-auto flex flex-col space-y-1">
-  <h3 class="text-2xl font-semibold text-indigo-800 mb-2">Live Logs</h3>
-  <div *ngFor="let log of logs" class="text-xs md:text-sm font-mono p-1 border-b border-gray-100">
-    <span class="text-gray-700">{{log}}</span>
+<div [class.mobile-fullscreen]="isMobile" 
+     class="bg-gradient-to-br from-gray-900 to-black rounded-3xl shadow-2xl p-6 h-96 flex flex-col border border-gray-800 relative overflow-hidden">
+  
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-800/50">
+    <h3 class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent flex items-center gap-2">
+      📡 <span>LIVE LOGS</span>
+    </h3>
+    
+    <!-- Controls -->
+    <div class="flex items-center gap-2">
+      <button (click)="togglePause()" 
+              [class.bg-red-600]="isPaused"
+              [class.bg-emerald-600]="!isPaused"
+              class="px-3 py-1.5 text-xs font-bold rounded-lg text-white shadow-md hover:shadow-lg transition-all">
+        {{ isPaused ? '▶️ RESUME' : '⏸️ PAUSE' }}
+      </button>
+      <button (click)="toggleAutoScroll()" 
+              [class.bg-indigo-600]="autoScroll"
+              class="px-3 py-1.5 text-xs font-bold rounded-lg text-white shadow-md hover:shadow-lg transition-all">
+        {{ autoScroll ? '📜 AUTO' : '📜 OFF' }}
+      </button>
+      <button (click)="clearLogs()" class="px-3 py-1.5 text-xs font-bold bg-gray-700 hover:bg-gray-600 rounded-lg text-white shadow-md transition-all">
+        🗑️
+      </button>
+    </div>
+  </div>
+
+  <!-- Logs -->
+  <div #logBox class="flex-1 overflow-y-auto space-y-1 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900 p-2 font-mono text-xs md:text-sm select-none">
+    <div *ngFor="let log of logs" 
+         class="log-entry p-2 rounded-lg hover:bg-gray-800/50 transition-colors flex items-start gap-3 group"
+         [style.animation]="'fadeIn 0.2s ease-in'">
+      
+      <span class="text-gray-400 flex-shrink-0 min-w-[6rem]">{{ log.timestamp }}</span>
+      
+      <span [ngClass]="{
+        'bg-green-500/20 text-green-400': log.level === 'INFO',
+        'bg-yellow-500/20 text-yellow-400': log.level === 'WARN',
+        'bg-red-500/20 text-red-400': log.level === 'ERROR',
+        'bg-blue-500/20 text-blue-400': log.level === 'DEBUG'
+      }" class="px-2 py-0.5 rounded-full text-xs font-bold uppercase flex-shrink-0">
+        {{ log.level }}
+      </span>
+      
+      <span class="text-gray-200 flex-1">{{ log.message }}</span>
+    </div>
+    
+    <div *ngIf="logs.length === 0" class="flex flex-col items-center justify-center h-full text-gray-500 text-center py-8">
+      <div class="text-4xl mb-4">📡</div>
+      <p class="text-lg mb-2 font-medium">Waiting for logs...</p>
+      <p class="text-sm opacity-75">{{ isPaused ? 'Click Resume to start' : 'Streaming live...' }}</p>
+    </div>
   </div>
 </div>
