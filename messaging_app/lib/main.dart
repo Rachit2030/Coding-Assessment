@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messaging_app/Data/routes.dart';
 import 'package:messaging_app/View/internal_tools/webview_page.dart';
 import 'package:messaging_app/View/widgets/splash_page_widget.dart';
 import 'package:messaging_app/service/hive_service.dart';
@@ -25,22 +26,22 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.blue,
             brightness: Brightness.light,
           ),
-          scaffoldBackgroundColor: Colors.transparent, // Transparent for gradients
+          scaffoldBackgroundColor: Colors.transparent, 
         ),
         darkTheme: ThemeData.dark(useMaterial3: true).copyWith(
           colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.blue,
             brightness: Brightness.dark,
           ),
-          scaffoldBackgroundColor: Colors.transparent, // Transparent for gradients
+          scaffoldBackgroundColor: Colors.transparent, 
         ),
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
-        initialRoute: '/splash',
+        initialRoute: splashRoute,
         routes: {
-          '/splash': (_) => const SplashPage(),
-          '/': (_) => const ChatPage(),
-          '/tools': (_) => InternalToolsWebView(),
+          splashRoute: (_) => const SplashPage(),
+          chatPageRoute : (_) => const ChatPage(),
+          toolsRoute: (_) => InternalToolsWebView(),
         },
       ),
     );
