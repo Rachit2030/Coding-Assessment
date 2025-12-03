@@ -4,4 +4,10 @@ import { Component } from '@angular/core';
   selector: 'app-nav',
   templateUrl: './nav.component.html'
 })
-export class NavComponent {}
+export class NavComponent {
+  mobileMenuOpen: boolean = false;
+
+  toggleMenu() {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+}

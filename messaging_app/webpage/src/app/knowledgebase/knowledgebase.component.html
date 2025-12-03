@@ -1,28 +1,27 @@
-<div class="bg-white p-4 rounded shadow">
-  <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-semibold">Knowledgebase Editor</h3>
-    <div>
+<div class="bg-white rounded-xl shadow-lg p-6 space-y-4">
+  <div class="flex justify-between items-center">
+    <h3 class="text-2xl font-semibold text-indigo-800">Knowledgebase Editor</h3>
+    <div class="space-x-2">
       <button (click)="preview = !preview"
-              class="px-2 py-1 md:px-3 md:py-2 border rounded mr-2 text-sm md:text-base">
-        {{ preview ? 'Edit' : 'Preview' }}
+              class="px-4 py-2 rounded-lg bg-indigo-500 text-white hover:bg-indigo-600 transition">
+        {{preview ? 'Edit' : 'Preview'}}
       </button>
-
       <button (click)="save()"
-              class="px-2 py-1 md:px-3 md:py-2 border rounded text-sm md:text-base">
+              class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition">
         Save
       </button>
     </div>
   </div>
 
-  <!-- EDIT MODE -->
+  <!-- Editor -->
   <div *ngIf="!preview">
-    <textarea [(ngModel)]="content" rows="14"
-              class="w-full h-60 md:h-96 border rounded p-2 font-mono">
-    </textarea>
+    <textarea [(ngModel)]="content" rows="12"
+              class="w-full border rounded-lg p-3 font-mono text-gray-700 text-sm md:text-base
+                     focus:ring focus:ring-indigo-200 focus:outline-none"></textarea>
   </div>
 
-  <!-- PREVIEW MODE -->
-  <div *ngIf="preview" class="prose max-w-none p-2 border rounded">
-    <div [innerHTML]="renderedHtml"></div>
+  <!-- Preview -->
+  <div *ngIf="preview" class="prose max-w-none p-4 border rounded-lg bg-indigo-50 text-indigo-900">
+    <div [innerHTML]="formattedContent"></div>
   </div>
 </div>
