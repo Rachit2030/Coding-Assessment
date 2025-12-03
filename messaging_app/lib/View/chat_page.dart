@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/services.dart'; // ✅ For emoji keyboard
 import 'package:image_picker/image_picker.dart';
 import 'package:messaging_app/Model/message_model.dart';
-import 'dart:io';
 import '../cubit/chat_cubit.dart';
 import 'chat_bubble.dart';
 import '../View/internal_tools/webview_page.dart';
@@ -20,7 +18,6 @@ class _ChatPageState extends State<ChatPage> {
   final ScrollController _scrollCtrl = ScrollController();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final ImagePicker _picker = ImagePicker();
-  bool _showEmojiKeyboard = false; // ✅ Emoji keyboard state
 
   @override
   void initState() {
@@ -63,18 +60,6 @@ class _ChatPageState extends State<ChatPage> {
     }
   }
 
-  // ✅ EMOJI TOGGLE
-  void _toggleEmojiKeyboard() {
-    setState(() {
-      _showEmojiKeyboard = !_showEmojiKeyboard;
-    });
-    
-    // Hide system keyboard when showing emoji
-    if (_showEmojiKeyboard) {
-      SystemChannels.textInput.invokeMethod('TextInput.hide');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -96,41 +81,6 @@ class _ChatPageState extends State<ChatPage> {
           child: Column(
             children: [
               Expanded(child: _buildMessagesList()),
-              // ✅ EMOJI KEYBOARD
-              if (_showEmojiKeyboard)
-                Container(
-                  height: 250,
-                  color: isDark ? Colors.grey[900] : Colors.grey[100],
-                  padding: const EdgeInsets.all(8),
-                  child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 8,
-                      childAspectRatio: 1.2,
-                      crossAxisSpacing: 4,
-                      mainAxisSpacing: 4,
-                    ),
-                    itemCount: _emojis.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          final emoji = _emojis[index];
-                          _controller.text += emoji;
-                          context.read<ChatCubit>().sendEmoji(emoji); // ✅ Use sendEmoji
-                          _controller.clear();
-                          _toggleEmojiKeyboard();
-                          _scrollToBottom();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Center(child: Text(_emojis[index])),
-                        ),
-                      );
-                    },
-                  ),
-                ),
               _inputBar(isDark),
             ],
           ),
@@ -138,14 +88,6 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
-
-  // ✅ EMOJI LIST
-  final List<String> _emojis = [
-    '😀', '😂', '🤔', '😍', '🥰', '😢', '😎', '👍',
-    '👎', '❤️', '🔥', '⭐', '🚀', '💯', '🎉', '🙌',
-    '👋', '✋', '🤝', '💪', '👏', '🙏', '🤗', '😘',
-    '😜', '🤓', '😇', '🤠', '🥳', '😡', '🤬', '😱',
-  ];
 
   Widget _buildMessagesList() {
     return BlocBuilder<ChatCubit, List<MessageModel>>(
@@ -197,29 +139,31 @@ class _ChatPageState extends State<ChatPage> {
   PreferredSizeWidget _buildAppBar(bool isDark) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(70),
-      child: Container(
-        height: 70,
-        padding: const EdgeInsets.only(top: 10),
-        margin: const EdgeInsets.only(bottom: 8),
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          gradient: LinearGradient(colors: [Colors.transparent, Colors.black.withOpacity(isDark ? 0.3 : 0.1)]),
-        ),
-        child: AppBar(
-          title: const Text("Chat App"),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: IconButton(
-                icon: Icon(Icons.public, color: isDark ? Colors.white : Colors.black87),
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) =>  InternalToolsWebView())),
+      child: SafeArea(
+        child: Container(
+          height: 70,
+          padding: const EdgeInsets.only(top: 10),
+          margin: const EdgeInsets.only(bottom: 8),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            gradient: LinearGradient(colors: [Colors.transparent, Colors.black.withOpacity(isDark ? 0.3 : 0.1)]),
+          ),
+          child: AppBar(
+            title: const Text("Chat App"),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: IconThemeData(color: isDark ? Colors.white : Colors.black87),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: IconButton(
+                  icon: Icon(Icons.public, color: isDark ? Colors.white : Colors.black87),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) =>  InternalToolsWebView())),
+                ),
               ),
-            ),
-            IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => context.read<ChatCubit>().clearAllMessages()),
-          ],
+              IconButton(icon: const Icon(Icons.delete_outline), onPressed: () => context.read<ChatCubit>().clearAllMessages()),
+            ],
+          ),
         ),
       ),
     );
@@ -241,13 +185,6 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           IconButton(icon: Icon(Icons.image, color: isDark ? Colors.white70 : Colors.grey[600]), onPressed: _sendImage),
           const SizedBox(width: 4),
-          
-          IconButton(
-            icon: Icon(_showEmojiKeyboard ? Icons.keyboard : Icons.emoji_emotions, color: isDark ? Colors.white70 : Colors.grey[600]),
-            onPressed: _toggleEmojiKeyboard,
-          ),
-          const SizedBox(width: 4),
-          
           Expanded(
             child: TextField(
               controller: _controller,
