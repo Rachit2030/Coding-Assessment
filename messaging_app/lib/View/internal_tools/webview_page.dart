@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -16,7 +17,11 @@ class _InternalToolsWebViewState extends State<InternalToolsWebView> {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(
-        Uri.parse("http://localhost:4200"), // Angular local dev server
+        Uri.parse(
+  defaultTargetPlatform == TargetPlatform.android
+    ? "http://10.0.2.2:4200"
+    : "http://localhost:4200"
+)
       );
   }
 
