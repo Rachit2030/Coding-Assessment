@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:messaging_app/Model/message_model.dart';
@@ -14,10 +13,9 @@ class ChatBubble extends StatelessWidget {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: 
-          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        // Message Bubble (NO timestamp inside)
+        // Message Bubble
         Align(
           alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
@@ -26,30 +24,29 @@ class ChatBubble extends StatelessWidget {
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
-              margin: const EdgeInsets.only(bottom: 2),
+              margin: const EdgeInsets.only(bottom: 4),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
+                // BETTER CHAT COLORS
                 gradient: LinearGradient(
                   colors: isMe 
-                    ? [const Color(0xFF4FC3F7), const Color(0xFF0288D1)]
-                    : [const Color(0xFF26A69A), const Color(0xFF00796B)],
+                    ? [Colors.blue.shade500, Colors.blue.shade700]  // Clean Blue
+                    : [Colors.green.shade400, Colors.green.shade600], // Fresh Green
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: (isMe ? const Color(0xFF0288D1) : const Color(0xFF00796B))
-                        .withOpacity(isDark ? 0.4 : 0.25),
+                    color: (isMe ? Colors.blue.shade700 : Colors.green.shade600)
+                        .withOpacity(isDark ? 0.5 : 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Column(
-                crossAxisAlignment: isMe 
-                  ? CrossAxisAlignment.end 
-                  : CrossAxisAlignment.start,
+                crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Sender name (only for received messages)
@@ -67,7 +64,7 @@ class ChatBubble extends StatelessWidget {
                       ),
                     ),
                   
-                  // Message content ONLY
+                  // Message content
                   _messageContent(context),
                 ],
               ),
@@ -75,25 +72,22 @@ class ChatBubble extends StatelessWidget {
           ),
         ),
         
-        // REAL SYSTEM TIMESTAMP - Outside bubble
+        // TIMESTAMP - Theme Adaptive (Outside bubble)
         Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 8,
-            vertical: isMe ? 2 : 6,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: isMe ? 1 : 3),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: isMe 
-              ? MainAxisAlignment.end 
-              : MainAxisAlignment.start,
+            mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               Text(
                 _getRealSystemTime(),
                 style: TextStyle(
                   fontSize: 11,
-                  color: Colors.white.withOpacity(0.6),
-                  fontWeight: FontWeight.w400,
-                  letterSpacing: 0.3,
+                  color: isDark 
+                    ? Colors.white.withOpacity(0.8)      // Bright white in dark
+                    : Colors.grey[700]!,                 // Dark grey in light
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.2,
                 ),
               ),
               if (isMe) ...[
@@ -101,7 +95,9 @@ class ChatBubble extends StatelessWidget {
                 Icon(
                   message.isRead ? Icons.done_all : Icons.done,
                   size: 12,
-                  color: Colors.white.withOpacity(0.7),
+                  color: isDark 
+                    ? Colors.white.withOpacity(0.8)      // Bright white in dark
+                    : Colors.grey[700]!,                 // Dark grey in light
                 ),
               ],
             ],
@@ -111,7 +107,7 @@ class ChatBubble extends StatelessWidget {
     );
   }
 
-  /// Get REAL system timestamp (updates every second)
+  /// Get REAL system timestamp (HH:mm format)
   String _getRealSystemTime() {
     final now = DateTime.now();
     return DateFormat('HH:mm').format(now);
@@ -134,12 +130,16 @@ class ChatBubble extends StatelessWidget {
             errorBuilder: (context, error, stackTrace) => Container(
               height: 180,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                gradient: LinearGradient(
+                  colors: [Colors.grey.shade300, Colors.grey.shade400],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.image_not_supported,
-                color: Colors.white70,
+                color: Colors.grey.shade600,
                 size: 50,
               ),
             ),

@@ -111,11 +111,13 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+
+
   PreferredSizeWidget _buildAppBar(bool isDark) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(70),
       child: Container(
-        height: 70,
+        
         padding: const EdgeInsets.only(top: 10),
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
@@ -126,7 +128,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
         child: AppBar(
           title: Text(
-            "ChatApp",
+            "Chat App",
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w700,
@@ -141,7 +143,7 @@ class _ChatPageState extends State<ChatPage> {
             Padding(
               padding: const EdgeInsets.only(right: 16),
               child: IconButton(
-                icon: Icon(Icons.dashboard, color: isDark ? Colors.white : Colors.black87),
+                icon: Icon(Icons.public, color: isDark ? Colors.white : Colors.black87),
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (_) =>  ToolsPage()),
@@ -153,6 +155,8 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
+
+
 
   Widget _inputBar(bool isDark) {
     final cubit = context.read<ChatCubit>();
