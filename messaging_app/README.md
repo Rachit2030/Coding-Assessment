@@ -34,7 +34,7 @@ npm --version
 ### **Start Server**
 
 ``` bash
-cd angular-app        # Your Angular folder
+cd webpage  
 npm install
 npm start
 ```
