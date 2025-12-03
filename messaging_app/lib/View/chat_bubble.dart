@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:messaging_app/Model/message_model.dart';
 
 class ChatBubble extends StatelessWidget {
@@ -27,11 +26,10 @@ class ChatBubble extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 4),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                // BETTER CHAT COLORS
                 gradient: LinearGradient(
                   colors: isMe 
-                    ? [Colors.blue.shade500, Colors.blue.shade700]  // Clean Blue
-                    : [Colors.green.shade400, Colors.green.shade600], // Fresh Green
+                    ? [Colors.blue.shade500, Colors.blue.shade700]
+                    : [Colors.green.shade400, Colors.green.shade600],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -49,7 +47,6 @@ class ChatBubble extends StatelessWidget {
                 crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Sender name (only for received messages)
                   if (message.senderName != null && !isMe)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 4),
@@ -64,7 +61,6 @@ class ChatBubble extends StatelessWidget {
                       ),
                     ),
                   
-                  // Message content
                   _messageContent(context),
                 ],
               ),
@@ -72,7 +68,7 @@ class ChatBubble extends StatelessWidget {
           ),
         ),
         
-        // TIMESTAMP - Theme Adaptive (Outside bubble)
+        // ✅ ACTUAL MESSAGE TIMESTAMP from Hive
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8, vertical: isMe ? 1 : 3),
           child: Row(
@@ -80,12 +76,12 @@ class ChatBubble extends StatelessWidget {
             mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               Text(
-                _getRealSystemTime(),
+                message.formattedTime,  // ✅ Uses Hive timestamp (HH:mm)
                 style: TextStyle(
                   fontSize: 11,
                   color: isDark 
-                    ? Colors.white.withOpacity(0.8)      // Bright white in dark
-                    : Colors.grey[700]!,                 // Dark grey in light
+                    ? Colors.white.withOpacity(0.8)
+                    : Colors.grey[700]!,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.2,
                 ),
@@ -96,8 +92,8 @@ class ChatBubble extends StatelessWidget {
                   message.isRead ? Icons.done_all : Icons.done,
                   size: 12,
                   color: isDark 
-                    ? Colors.white.withOpacity(0.8)      // Bright white in dark
-                    : Colors.grey[700]!,                 // Dark grey in light
+                    ? Colors.white.withOpacity(0.8)
+                    : Colors.grey[700]!,
                 ),
               ],
             ],
@@ -105,12 +101,6 @@ class ChatBubble extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  /// Get REAL system timestamp (HH:mm format)
-  String _getRealSystemTime() {
-    final now = DateTime.now();
-    return DateFormat('HH:mm').format(now);
   }
 
   Widget _messageContent(BuildContext context) {

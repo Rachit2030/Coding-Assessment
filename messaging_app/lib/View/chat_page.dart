@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messaging_app/View/internal_tools/tools_page.dart';
+import 'package:messaging_app/View/internal_tools/webview_page.dart';
 import '../cubit/chat_cubit.dart';
 import 'chat_bubble.dart';
 
@@ -89,6 +89,8 @@ class _ChatPageState extends State<ChatPage> {
             _scrollToBottom();
           }
         });
+        if (messages.isEmpty) return Container(); // Before AnimatedList
+
 
         return AnimatedList(
           key: _listKey,
@@ -146,10 +148,16 @@ class _ChatPageState extends State<ChatPage> {
                 icon: Icon(Icons.public, color: isDark ? Colors.white : Colors.black87),
                 onPressed: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) =>  ToolsPage()),
+                  MaterialPageRoute(builder: (_) =>  InternalToolsWebView()),
                 ),
               ),
             ),
+            IconButton(
+  icon: const Icon(Icons.delete_outline),
+  onPressed: () {
+    context.read<ChatCubit>().clearAllMessages();
+  },
+),
           ],
         ),
       ),

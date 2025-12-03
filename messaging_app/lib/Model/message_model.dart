@@ -1,13 +1,36 @@
-enum MessageType { text, image, emoji }
+import 'package:hive/hive.dart';
 
-class MessageModel {
-  final String id;              // Unique ID for the message
-  final String text;            // Message content
-  final bool isMe;              // Sent by user or not
-  final DateTime timestamp;     // Time of message
-  final MessageType messageType; // Type of message (text, image, emoji)
-  final String? senderName;     // Optional sender name for group chats
-  final bool isRead;            // Whether the message has been read
+part 'message_model.g.dart'; // Generated file
+
+@HiveType(typeId: 0)
+enum MessageType {
+  @HiveField(0) text,
+  @HiveField(1) image,
+  @HiveField(2) emoji,
+}
+
+@HiveType(typeId: 1)
+class MessageModel extends HiveObject {
+  @HiveField(0)
+  final String id;
+
+  @HiveField(1)
+  final String text;
+
+  @HiveField(2)
+  final bool isMe;
+
+  @HiveField(3)
+  final DateTime timestamp;
+
+  @HiveField(4)
+  final MessageType messageType;
+
+  @HiveField(5)
+  final String? senderName;
+
+  @HiveField(6)
+  final bool isRead;
 
   MessageModel({
     required this.id,
@@ -16,6 +39,13 @@ class MessageModel {
     required this.timestamp,
     this.messageType = MessageType.text,
     this.isRead = false,
-    this.senderName
+    this.senderName,
   });
+
+  // Helper for ChatBubble timestamp display
+  String get formattedTime => _formatTime(timestamp);
+
+  static String _formatTime(DateTime dateTime) {
+    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
 }
